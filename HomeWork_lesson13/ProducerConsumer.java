@@ -68,19 +68,20 @@ class Consumer implements Runnable {
     public void run() {
         synchronized (list) {
             while (true) {
-                if (list.size() == 0) {
+                while (list.isEmpty()) {
                     try {
                         list.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                } else {
-                    for (Integer x : list) {
-                        System.out.println(Thread.currentThread().getName() + " - Вывод числа из контейнера: " + x);
-                    }
-                    list.removeAll(list);
-                    list.notifyAll();
                 }
+
+                for (Integer x : list) {
+                    System.out.println(Thread.currentThread().getName() + " - Вывод числа из контейнера: " + x);
+                }
+                list.removeAll(list);
+                list.notifyAll();
+
             }
         }
     }
